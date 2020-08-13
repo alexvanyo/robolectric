@@ -245,6 +245,19 @@ public class ShadowMediaPlayerTest {
   }
 
   @Test
+  public void testSetDataSourceUsesCustomMediaInfoProvider() throws Exception {
+    MediaInfo mediaInfo = new MediaInfo();
+    ShadowMediaPlayer.setMediaInfoProvider(unused -> mediaInfo);
+    String path = "data_source_path";
+    DataSource ds = toDataSource(path);
+    mediaPlayer.setDataSource(path);
+    assertWithMessage("dataSource").that(shadowMediaPlayer.getDataSource()).isEqualTo(ds);
+    assertWithMessage("mediaInfo")
+        .that(shadowMediaPlayer.getMediaInfo())
+        .isSameInstanceAs(mediaInfo);
+  }
+
+  @Test
   public void testPrepareAsyncAutoCallback() {
     mediaPlayer.setOnPreparedListener(preparedListener);
     int[] testDelays = { 0, 10, 100, 1500 };
